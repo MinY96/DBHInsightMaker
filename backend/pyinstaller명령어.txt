@@ -1,0 +1,5 @@
+[OneFile 버전]
+pyinstaller --onefile --noconsole --add-data="fonts;fonts" --add-data="eda_manager;eda_manager" --add-data="project_manager;project_manager" app.py
+
+[OneDir 버전]
+pyinstaller --onedir --noconsole --add-data="fonts;fonts" --add-data="helper;helper" --add-data="eda_manager;eda_manager" --add-data="project_manager;project_manager" --add-data="database_manager;database_manager" app.py

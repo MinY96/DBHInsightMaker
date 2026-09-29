@@ -1,0 +1,344 @@
+﻿<ui:Page x:Class="DBHTab.Pages.RegLogisticModelPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:c="clr-namespace:DBHTab.Converters"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:DBHTab.Pages"
+      mc:Ignorable="d" 
+      xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
+      xmlns:uc="clr-namespace:DBHTab.UserControls"
+      xmlns:ui="http://schemas.modernwpf.com/2019">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0"
+            Style="{StaticResource HeaderTextBlockStyle}" 
+            FontSize="35" Text="회귀 모형" VerticalAlignment="Center"/>
+        <ui:SimpleStackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,0,0,0">
+            <TextBlock FontSize="18" Text="회귀 모델 타입 : "/>
+            <TextBlock FontSize="18" Text="{Binding LogisticModelInfo.ModelType, UpdateSourceTrigger=PropertyChanged}"/>
+        </ui:SimpleStackPanel>
+        <ui:SimpleStackPanel Grid.Row="2" Orientation="Horizontal" Margin="10,0,0,0">
+            <TextBlock FontSize="18" Text="회귀식 : "/>
+            <TextBlock FontSize="18" TextWrapping="Wrap" FontStyle="Italic" Text="{Binding LogisticModelInfo.RegEquation, UpdateSourceTrigger=PropertyChanged}"/>
+        </ui:SimpleStackPanel>
+        <Border Grid.Row="3"
+            Background="{DynamicResource SystemControlPageBackgroundChromeLowBrush}"
+            HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+            Margin="5" Padding="5">
+            <Grid Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.5*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="0" BorderBrush="Gray" BorderThickness="0,0,2,0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <emoji:TextBlock Grid.Row="0" Text="📰 회귀 계수 테이블" Style="{DynamicResource SubtitleTextBlockStyle}"/>
+                        <DataGrid x:Name="CoefGrid" Grid.Row="1"
+                        ItemsSource="{Binding CoefTable}"
+                        AutoGenerateColumns="True"
+                        IsReadOnly="True"
+                        HeadersVisibility="Column" GridLinesVisibility="Horizontal"   
+                        CanUserReorderColumns="False"    
+                        AlternatingRowBackground="AliceBlue"
+                        Margin="0,0,10,0"/>
+                    </Grid>
+                </Border>
+                <Border Grid.Column="1" BorderBrush="Gray" BorderThickness="0,0,2,0">
+                    <Grid Margin="10,0,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <emoji:TextBlock Grid.Row="0" Text="📈 모델 적합도 지표"
+                                     Style="{DynamicResource SubtitleTextBlockStyle}"/>
+                        <ui:ScrollViewerEx Grid.Row="1" VerticalScrollBarVisibility="auto"
+                                       VerticalAlignment="Stretch"
+                                       HorizontalScrollBarVisibility="Auto">
+                            <ui:SimpleStackPanel Spacing="15" Margin="10,0,0,0" DataContext="{Binding LogisticModelInfo}">
+                                <ui:SimpleStackPanel Orientation="Horizontal">
+                                    <TextBlock Text="- 표본 크기 (n) : "/>
+                                    <TextBlock Text="{Binding DataSize, UpdateSourceTrigger=PropertyChanged, StringFormat=N0}"/>
+                                </ui:SimpleStackPanel>
+                                <ui:SimpleStackPanel Orientation="Horizontal">
+                                    <TextBlock Text="- 변수 개수 (k) : "/>
+                                    <TextBlock Text="{Binding IndepValCount, UpdateSourceTrigger=PropertyChanged, StringFormat=N0}"/>
+                                </ui:SimpleStackPanel>
+                                <ui:SimpleStackPanel Orientation="Horizontal">
+                                    <TextBlock Text="- LLF (Log-Likelihood Function) : "/>
+                                    <TextBlock Text="{Binding LLF, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"/>
+                                </ui:SimpleStackPanel>
+                            </ui:SimpleStackPanel>
+                        </ui:ScrollViewerEx>
+                    </Grid>
+                </Border>
+                <Border Grid.Column="2">
+                    <Grid Margin="10,0,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <emoji:TextBlock Grid.Row="0" Text="🧠 모델 평가 지표" Style="{DynamicResource SubtitleTextBlockStyle}"/>
+                        <Button Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Stretch"
+                            Background="SkyBlue" BorderBrush="DarkBlue" Width="30" Height="30" Margin="0,-10,0,0"
+                                Click="Logictic_Metrics_Clicked">
+                            <emoji:TextBlock Text="❔" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="12"/>
+                        </Button>
+                        <ui:ScrollViewerEx Grid.Row="1" 
+                                       VerticalScrollBarVisibility="auto" 
+                                       VerticalAlignment="Stretch"
+                                       HorizontalScrollBarVisibility="Auto">
+                            <ui:SimpleStackPanel Spacing="15" Margin="10,0,0,0" DataContext="{Binding LogisticModelInfo}">
+                                <ui:SimpleStackPanel Orientation="Horizontal">
+                                    <TextBlock Text="- LLR-statistic (LLR통계량) : "/>
+                                    <TextBlock Text="{Binding Statistic, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"/>
+                                </ui:SimpleStackPanel>
+                                <ui:SimpleStackPanel Orientation="Horizontal">
+                                    <TextBlock Text="- p-value : "/>
+                                    <TextBlock Text="{Binding PValue, UpdateSourceTrigger=PropertyChanged, StringFormat=E2}"/>
+                                </ui:SimpleStackPanel>
+                                <ui:SimpleStackPanel Orientation="Horizontal">
+                                    <TextBlock Text="- AIC (Akaike Information Criterion) : "/>
+                                    <TextBlock Text="{Binding AIC, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"/>
+                                </ui:SimpleStackPanel>
+                                <ui:SimpleStackPanel Orientation="Horizontal">
+                                    <TextBlock Text="- BIC (Bayesian Information Criterion) : "/>
+                                    <TextBlock Text="{Binding BIC, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"/>
+                                </ui:SimpleStackPanel>
+                            </ui:SimpleStackPanel>
+                        </ui:ScrollViewerEx>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="0"
+                Background="{DynamicResource SystemControlPageBackgroundChromeLowBrush}"
+                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                Margin="5" Padding="5">
+                <Border Padding="5">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <emoji:TextBlock Grid.Row="0" Text="📰 회귀 모델 결과 테이블" Style="{DynamicResource SubtitleTextBlockStyle}"/>
+                        <DataGrid x:Name="RegTable" Grid.Row="1"
+                            ItemsSource="{Binding RegTable}"
+                            AutoGenerateColumns="True"
+                            IsReadOnly="True"
+                            HeadersVisibility="Column" GridLinesVisibility="Horizontal"   
+                            CanUserReorderColumns="False"    
+                            AlternatingRowBackground="AliceBlue"/>
+                    </Grid>
+                </Border>
+            </Border>
+            <Border Grid.Column="1"
+                Background="{DynamicResource SystemControlPageBackgroundChromeLowBrush}"
+                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                Margin="5" Padding="5">
+                <Grid>
+                    <TabControl Margin="-5">
+                        <TabItem Header="ROC Curve 기준">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.Column="0" BorderBrush="Gray" BorderThickness="0,0,2,0">
+                                    <Grid Margin="5,5,0,0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="40"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <emoji:TextBlock Grid.Row="0" Text="🎯 분류 성능 지표" Style="{DynamicResource SubtitleTextBlockStyle}"/>
+                                        <ui:ScrollViewerEx Grid.Row="1" VerticalScrollBarVisibility="auto"
+                                            VerticalAlignment="Stretch"
+                                            HorizontalScrollBarVisibility="Auto">
+                                            <ui:SimpleStackPanel Spacing="15" Margin="10,0,0,0" DataContext="{Binding LogisticModelInfo.ROCMetrics}">
+                                                <ui:SimpleStackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="- AUC (Area Under the Curve) : "/>
+                                                    <TextBlock Text="{Binding AUC, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"/>
+                                                </ui:SimpleStackPanel>
+                                                <ui:SimpleStackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="- TN (True Negative) : "/>
+                                                    <TextBlock Text="{Binding TN, UpdateSourceTrigger=PropertyChanged, StringFormat=N0}"/>
+                                                </ui:SimpleStackPanel>
+                                                <ui:SimpleStackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="- TP (True Positive) : "/>
+                                                    <TextBlock Text="{Binding TP, UpdateSourceTrigger=PropertyChanged, StringFormat=N0}"/>
+                                                </ui:SimpleStackPanel>
+                                                <ui:SimpleStackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="- FN (False Negative) : "/>
+                                                    <TextBlock Text="{Binding FN, UpdateSourceTrigger=PropertyChanged, StringFormat=N0}"/>
+                                                </ui:SimpleStackPanel>
+                                                <ui:SimpleStackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="- FP (False Positive) : "/>
+                                                    <TextBlock Text="{Binding FP, UpdateSourceTrigger=PropertyChanged, StringFormat=N0}"/>
+                                                </ui:SimpleStackPanel>
+                                                <ui:SimpleStackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="- Accuracy (정확도) : "/>
+                                                    <TextBlock Text="{Binding Accuracy, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"/>
+                                                </ui:SimpleStackPanel>
+                                                <ui:SimpleStackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="- Recall (재현율) : "/>
+                                                    <TextBlock Text="{Binding Recall, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"/>
+                                                </ui:SimpleStackPanel>
+                                                <ui:SimpleStackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="- Precision (정밀도) : "/>
+                                                    <TextBlock Text="{Binding Precision, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"/>
+                                                </ui:SimpleStackPanel>
+                                                <ui:SimpleStackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="- F1 Score : "/>
+                                                    <TextBlock Text="{Binding F1Score, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"/>
+                                                </ui:SimpleStackPanel>
+                                                <ui:SimpleStackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="- Specificity (특이도) : "/>
+                                                    <TextBlock Text="{Binding Specificity, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"/>
+                                                </ui:SimpleStackPanel>
+                                                <ui:SimpleStackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="- FPR (False Positive Rate) : "/>
+                                                    <TextBlock Text="{Binding FPR, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"/>
+                                                </ui:SimpleStackPanel>
+                                                <ui:SimpleStackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="- NPV (Negative Predictive Value) : "/>
+                                                    <TextBlock Text="{Binding NPV, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"/>
+                                                </ui:SimpleStackPanel>
+                                            </ui:SimpleStackPanel>
+                                        </ui:ScrollViewerEx>
+                                    </Grid>
+                                </Border>
+                                <Border Grid.Column="1" BorderBrush="Gray" BorderThickness="0,0,2,0">
+                                    <uc:usSingleChartViewer                                   
+                                            HorizontalAlignment="Stretch" 
+                                            VerticalAlignment="Stretch"
+                                            ChartPath="Confusion Matrix.png"
+                                            ChartName="Confusion Matrix(혼동행렬)"
+                                            ChartImage="{Binding ROCConfusionMatrixImg}"/>
+                                </Border>
+                                <Border Grid.Column="2">
+                                    <uc:usSingleChartViewer                                   
+                                            HorizontalAlignment="Stretch" 
+                                            VerticalAlignment="Stretch"
+                                            ChartPath="ROC Curve.png"
+                                            ChartName="ROC Curve"
+                                            ChartImage="{Binding ROCCurveImg}"/>
+                                </Border>
+                            </Grid>
+                        </TabItem>
+                        <TabItem Header="PR Curve 기준">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.Column="0" BorderBrush="Gray" BorderThickness="0,0,2,0">
+                                    <Grid Margin="5,5,0,0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="40"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <emoji:TextBlock Grid.Row="0" Text="🎯 분류 성능 지표" Style="{DynamicResource SubtitleTextBlockStyle}"/>
+                                        <ui:ScrollViewerEx Grid.Row="1" VerticalScrollBarVisibility="auto"
+                                            VerticalAlignment="Stretch"
+                                            HorizontalScrollBarVisibility="Auto">
+                                            <ui:SimpleStackPanel Spacing="15" Margin="10,0,0,0" DataContext="{Binding LogisticModelInfo.PRMetrics}">
+                                                <ui:SimpleStackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="- AUC (Area Under the Curve) : "/>
+                                                    <TextBlock Text="{Binding AUC, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"/>
+                                                </ui:SimpleStackPanel>
+                                                <ui:SimpleStackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="- TN (True Negative) : "/>
+                                                    <TextBlock Text="{Binding TN, UpdateSourceTrigger=PropertyChanged, StringFormat=N0}"/>
+                                                </ui:SimpleStackPanel>
+                                                <ui:SimpleStackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="- TP (True Positive) : "/>
+                                                    <TextBlock Text="{Binding TP, UpdateSourceTrigger=PropertyChanged, StringFormat=N0}"/>
+                                                </ui:SimpleStackPanel>
+                                                <ui:SimpleStackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="- FN (False Negative) : "/>
+                                                    <TextBlock Text="{Binding FN, UpdateSourceTrigger=PropertyChanged, StringFormat=N0}"/>
+                                                </ui:SimpleStackPanel>
+                                                <ui:SimpleStackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="- FP (False Positive) : "/>
+                                                    <TextBlock Text="{Binding FP, UpdateSourceTrigger=PropertyChanged, StringFormat=N0}"/>
+                                                </ui:SimpleStackPanel>
+                                                <ui:SimpleStackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="- Accuracy (정확도) : "/>
+                                                    <TextBlock Text="{Binding Accuracy, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"/>
+                                                </ui:SimpleStackPanel>
+                                                <ui:SimpleStackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="- Recall (재현율) : "/>
+                                                    <TextBlock Text="{Binding Recall, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"/>
+                                                </ui:SimpleStackPanel>
+                                                <ui:SimpleStackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="- Precision (정밀도) : "/>
+                                                    <TextBlock Text="{Binding Precision, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"/>
+                                                </ui:SimpleStackPanel>
+                                                <ui:SimpleStackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="- F1 Score : "/>
+                                                    <TextBlock Text="{Binding F1Score, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"/>
+                                                </ui:SimpleStackPanel>
+                                                <ui:SimpleStackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="- Specificity (특이도) : "/>
+                                                    <TextBlock Text="{Binding Specificity, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"/>
+                                                </ui:SimpleStackPanel>
+                                                <ui:SimpleStackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="- FPR (False Positive Rate) : "/>
+                                                    <TextBlock Text="{Binding FPR, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"/>
+                                                </ui:SimpleStackPanel>
+                                                <ui:SimpleStackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="- NPV (Negative Predictive Value) : "/>
+                                                    <TextBlock Text="{Binding NPV, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}"/>
+                                                </ui:SimpleStackPanel>
+                                            </ui:SimpleStackPanel>
+                                        </ui:ScrollViewerEx>
+                                    </Grid>
+                                </Border>
+                                <Border Grid.Column="1" BorderBrush="Gray" BorderThickness="0,0,2,0">
+                                    <uc:usSingleChartViewer                                   
+                                            HorizontalAlignment="Stretch" 
+                                            VerticalAlignment="Stretch"
+                                            ChartPath="Confusion Matrix.png"
+                                            ChartName="Confusion Matrix(혼동행렬)"
+                                            ChartImage="{Binding PRConfusionMatrixImg}"/>
+                                </Border>
+                                <Border Grid.Column="2">
+                                    <uc:usSingleChartViewer                                   
+                                            HorizontalAlignment="Stretch" 
+                                            VerticalAlignment="Stretch"
+                                            ChartPath="PR Curve.png"
+                                            ChartName="PR Curve"
+                                            ChartImage="{Binding PRCurveImg}"/>
+                                </Border>
+                            </Grid>
+                        </TabItem>
+                    </TabControl>
+                    <Button Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top"
+                        Background="SkyBlue" BorderBrush="DarkBlue" Width="30" Height="30"
+                            Click="LogisticDesc_Clicked">
+                        <emoji:TextBlock Text="❔" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="12"/>
+                    </Button>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</ui:Page>

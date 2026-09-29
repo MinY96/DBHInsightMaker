@@ -1,0 +1,354 @@
+﻿<Window x:Class="DBHTab.Views.ProjectMainView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:ui="http://schemas.modernwpf.com/2019"
+        xmlns:c="clr-namespace:DBHTab.Converters"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewmodels="clr-namespace:DBHTab.ViewModels"
+        xmlns:local="clr-namespace:DBHTab.Views"
+        d:DataContext="{d:DesignInstance Type=viewmodels:ProjectMainViewModel}"
+        mc:Ignorable="d"
+        ui:WindowHelper.UseModernWindowStyle="True"
+        Title="{Binding ProjectName, Mode=OneTime}"
+        MinHeight="630" MinWidth="1120"
+        ResizeMode="CanResizeWithGrip" WindowState="Maximized" WindowStartupLocation="CenterScreen">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="67"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <ui:SimpleStackPanel Grid.Row="0" Orientation="Horizontal"
+                             Spacing="5">
+            <TextBlock Text="{Binding ProjectName, Mode=OneTime}" 
+                       Style="{StaticResource HeaderTextBlockStyle}"
+                       VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="ExtraBold" FontSize="40"/>
+            <Button Content="데이터 로드" Margin="15"
+                    VerticalAlignment="Stretch"
+                    Style="{StaticResource AccentButtonStyle}"
+                    Command="{Binding PopupLoadDataCommand}" 
+                    CommandParameter="{Binding IsLoadData}"/>
+            <ui:ProgressRing
+                Width="40" VerticalAlignment="Stretch"
+                IsActive="{Binding IsWork}" />
+            <TextBlock Text="{Binding WorkingMessage, UpdateSourceTrigger=PropertyChanged}"
+                        VerticalAlignment="Center" HorizontalAlignment="Left"
+                        FontWeight="Light" FontSize="16" Foreground="DeepSkyBlue"/>
+
+        </ui:SimpleStackPanel>
+        <TextBlock Grid.Row="1" Text="{Binding ProjectDesc, Mode=OneTime}"
+                   FontWeight="Light" FontSize="18" VerticalAlignment="Top" Margin="10,0,0,0" Height="24"/>
+        <Grid Grid.Row="2" Margin="10,0,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <ui:SimpleStackPanel Spacing="5">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="생성 일자: "/>
+                        <TextBlock Text="{Binding CreateTime, Mode=OneTime, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="프로젝트 경로: "/>
+                        <TextBlock x:Name="txtProjectDir" Text="{Binding ProjectDir, Mode=OneTime}"/>
+                    </StackPanel>
+                </ui:SimpleStackPanel>
+            </Grid>
+            <Grid Grid.Column="1">
+                <ui:SimpleStackPanel Spacing="5">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="파일 명: "/>
+                        <TextBlock Text="{Binding FileName}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="파일 크기: "/>
+                        <TextBlock Text="{Binding FileSize, StringFormat={}{0:N2}MB}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="(행 / 열): "/>
+                        <TextBlock Text="{Binding RowCol}"/>
+                    </StackPanel>
+                </ui:SimpleStackPanel>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="3" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="200"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Grid.Column="0" Margin="-10, 0, 0, 5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="120"/>
+                </Grid.ColumnDefinitions>
+                <ui:SimpleStackPanel Orientation="Horizontal" Grid.Column="0" Spacing="10">
+                    <TextBlock Text="데이터 Summary" Style="{DynamicResource SubtitleTextBlockStyle}" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                    <ui:DropDownButton Content="Excel" Background="Green" Foreground="White">
+                        <ui:DropDownButton.Flyout>
+                            <ui:MenuFlyout Placement="BottomEdgeAlignedLeft">
+                                <MenuItem Header="원본 Data" Command="{Binding SaveDataToExcelCommand}">
+                                    <MenuItem.CommandParameter>
+                                        <MultiBinding Converter="{StaticResource MultiParaConverter}">
+                                            <Binding Path="ProjectDir"/>
+                                            <Binding Path="IsRaw"/>
+                                            <Binding Path="ColumnLists" />
+                                        </MultiBinding>
+                                    </MenuItem.CommandParameter>
+                                </MenuItem>
+                                <MenuItem Header="Summary Data" Command="{Binding SaveDataToExcelCommand}">
+                                    <MenuItem.CommandParameter>
+                                        <MultiBinding Converter="{StaticResource MultiParaConverter}">
+                                            <Binding Path="ProjectDir"/>
+                                            <Binding Path="IsSummary"/>
+                                            <Binding Path="ColumnLists" />
+                                        </MultiBinding>
+                                    </MenuItem.CommandParameter>
+                                </MenuItem>
+                            </ui:MenuFlyout>
+                        </ui:DropDownButton.Flyout>
+                    </ui:DropDownButton>
+                </ui:SimpleStackPanel>
+                <Button Grid.Column="1" Content="+ 데이터 추가" Visibility="Visible" HorizontalAlignment="Right"
+                        Style="{StaticResource AccentButtonStyle}"
+                        Command="{Binding PopupCreateNewColumnCommand}">
+                    <Button.CommandParameter>
+                        <MultiBinding Converter="{StaticResource MultiParaConverter}">
+                            <Binding ElementName="txtProjectDir" Path="Text"/>
+                            <Binding Path="ColumnLists" />
+                            <Binding RelativeSource="{RelativeSource AncestorType=Window}"/>
+                        </MultiBinding>
+                    </Button.CommandParameter>
+                </Button>
+            </Grid>
+            <DataGrid 
+                ui:ControlHelper.Header="데이터 Summary"
+                x:Name="columnInfoGrid"
+                Grid.Column="0" Grid.Row="1"
+                AutoGenerateColumns="False"
+                CanUserReorderColumns="False"                
+                HorizontalContentAlignment="Stretch"
+                VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                HeadersVisibility="Column" GridLinesVisibility="Horizontal"                
+                ScrollViewer.HorizontalScrollBarVisibility="Visible"
+                FrozenColumnCount="5"
+                IsEnabled="{Binding IsEnableMainGrid}"
+                ItemsSource="{Binding ColumnLists}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn
+                        Header="데이터" IsReadOnly="True"                        
+                        Binding="{Binding Column}"/>
+                    <DataGridTextColumn
+                        Header="유형" IsReadOnly="True"
+                        Binding="{Binding ColumnType, Converter={StaticResource ColumnTypeConverter}}"/>
+                    <DataGridTextColumn
+                        Header="Type" IsReadOnly="True"
+                        Binding="{Binding ColumnChar, Converter={StaticResource ColumnCharConverter}}"/>
+                    <DataGridTextColumn
+                        Header="개수" IsReadOnly="True"
+                        Binding="{Binding DataCount, StringFormat=N0}"/>
+                    <DataGridTextColumn
+                        Header="결측치" IsReadOnly="True"
+                        Binding="{Binding MissingCount, StringFormat=N0}"/>
+                    <DataGridTextColumn
+                        Header="결측치 비율" IsReadOnly="True"
+                        Binding="{Binding MissingRatio, StringFormat=P2}"/>
+                    <DataGridTextColumn
+                        Header="평균" IsReadOnly="True"
+                        Binding="{Binding Mean, StringFormat=N2}"/>
+                    <DataGridTextColumn
+                        Header="표준편차" IsReadOnly="True"
+                        Binding="{Binding Std, StringFormat=N2}"/>
+                    <DataGridTextColumn
+                        Header="최소값" IsReadOnly="True"
+                        Binding="{Binding Min, StringFormat=N2}"/>
+                    <DataGridTextColumn
+                        Header="Q1" IsReadOnly="True"
+                        Binding="{Binding Q1, StringFormat=N2}"/>
+                    <DataGridTextColumn
+                        Header="중위수" IsReadOnly="True"
+                        Binding="{Binding Median, StringFormat=N2}"/>
+                    <DataGridTextColumn
+                        Header="Q3" IsReadOnly="True"
+                        Binding="{Binding Q3, StringFormat=N2}"/>
+                    <DataGridTextColumn
+                        Header="최대값" IsReadOnly="True"
+                        Binding="{Binding Max, StringFormat=N2}"/>
+                    <DataGridTextColumn
+                        Header="최빈값" IsReadOnly="True"
+                        Binding="{Binding Mode}"/>
+                    <DataGridTextColumn
+                        Header="고유값 개수" IsReadOnly="True"
+                        Binding="{Binding UniqueCount, StringFormat=N0}"/>
+                    <DataGridTemplateColumn Header="Type 변경">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="변경"
+                                        Background="DarkOliveGreen" Margin="2"
+                                        BorderBrush="Transparent" Foreground="White"
+                                        HorizontalAlignment="Stretch" Command="{Binding PopupConvertTypeCommand}">
+                                    <Button.CommandParameter>
+                                        <MultiBinding Converter="{StaticResource MultiParaConverter}">
+                                            <Binding ElementName="txtProjectDir" Path="Text"/>
+                                            <Binding />
+                                            <Binding RelativeSource="{RelativeSource AncestorType=Window}"/>
+                                        </MultiBinding>
+                                    </Button.CommandParameter>
+                                    <Button.Resources>
+                                        <Style TargetType="Border">
+                                            <Setter Property="CornerRadius" Value="3"/>
+                                        </Style>
+                                    </Button.Resources>
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="정규성 검정">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Go!"
+                                        Background="DarkSeaGreen"
+                                        Margin="2"
+                                        BorderBrush="Transparent"
+                                        Foreground="White"
+                                        HorizontalAlignment="Stretch"
+                                        Command="{Binding PopupNomalityTestCommand}">
+                                    <Button.CommandParameter>
+                                        <MultiBinding Converter="{StaticResource MultiParaConverter}">
+                                            <Binding ElementName="txtProjectDir" Path="Text"/>
+                                            <Binding />
+                                        </MultiBinding>
+                                    </Button.CommandParameter>
+                                    <Button.Resources>
+                                        <Style TargetType="Border">
+                                            <Setter Property="CornerRadius" Value="3"/>
+                                        </Style>
+                                    </Button.Resources>
+                                    <Button.Style>
+                                        <Style  TargetType="Button">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding ColumnChar}" Value="Continuous">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding ColumnChar}" Value="Discrete">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="시각화">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Go!"
+                                        HorizontalAlignment="Stretch"
+                                        Margin="2"
+                                        Style="{StaticResource AccentButtonStyle}"
+                                        Command="{Binding PopupColumnChartCommand}">
+                                    <Button.CommandParameter>
+                                        <MultiBinding Converter="{StaticResource MultiParaConverter}">
+                                            <Binding ElementName="txtProjectDir" Path="Text"/>
+                                            <Binding />
+                                        </MultiBinding>
+                                    </Button.CommandParameter>
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="삭제">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="X"
+                                        Margin="2"
+                                        BorderBrush="Transparent" Foreground="Red"
+                                        HorizontalAlignment="Stretch" Command="{Binding PopupDeleteColumnCommand}">
+                                    <Button.CommandParameter>
+                                        <MultiBinding Converter="{StaticResource MultiParaConverter}">
+                                            <Binding ElementName="txtProjectDir" Path="Text"/>
+                                            <Binding />
+                                            <Binding RelativeSource="{RelativeSource AncestorType=Window}"/>
+                                        </MultiBinding>
+                                    </Button.CommandParameter>
+                                    <Button.Resources>
+                                        <Style TargetType="Border">
+                                            <Setter Property="CornerRadius" Value="3"/>
+                                        </Style>
+                                    </Button.Resources>
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+            <Border Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" VerticalAlignment="Stretch" Margin="10,0,0,0">
+                <ui:SimpleStackPanel Spacing="15">
+                    <Button Content="관계 시각화" HorizontalAlignment="Stretch" Style="{StaticResource AccentButtonStyle}"
+                            Command="{Binding PopupRelativeChartViewCommand}"
+                            IsEnabled="{Binding IsWork, Converter={StaticResource AnalyzeStateConverter}}">
+                        <Button.CommandParameter>
+                            <MultiBinding Converter="{StaticResource MultiParaConverter}">
+                                <Binding Path="ProjectName"/>
+                                <Binding Path="ProjectDir"/>
+                                <Binding Path="ColumnLists"/>
+                            </MultiBinding>
+                        </Button.CommandParameter>
+                    </Button>
+                    <Button Content="차트 커스텀" HorizontalAlignment="Stretch" Style="{StaticResource AccentButtonStyle}"
+                            Command="{Binding PopupCustomChartViewCommand}"
+                            IsEnabled="{Binding IsWork, Converter={StaticResource AnalyzeStateConverter}}">
+                        <Button.CommandParameter>
+                            <MultiBinding Converter="{StaticResource MultiParaConverter}">
+                                <Binding Path="ProjectName"/>
+                                <Binding Path="ProjectDir"/>
+                                <Binding Path="ColumnLists"/>
+                            </MultiBinding>
+                        </Button.CommandParameter>
+                    </Button>
+                    <Button Content="상관 분석" HorizontalAlignment="Stretch" Style="{StaticResource AccentButtonStyle}"
+                            Command="{Binding PopupAnalyzeCorrelationViewCommand}"
+                            IsEnabled="{Binding IsWork, Converter={StaticResource AnalyzeStateConverter}}">
+                        <Button.CommandParameter>
+                            <MultiBinding Converter="{StaticResource MultiParaConverter}">
+                                <Binding Path="ProjectName"/>
+                                <Binding Path="ProjectDir"/>
+                                <Binding Path="ColumnLists"/>
+                            </MultiBinding>
+                        </Button.CommandParameter>
+                    </Button>
+                    <Button Content="회귀 분석" HorizontalAlignment="Stretch" Style="{StaticResource AccentButtonStyle}"
+                            Command="{Binding PopupAnalysisRegressionViewCommand}"
+                            IsEnabled="{Binding IsWork, Converter={StaticResource AnalyzeStateConverter}}">
+                        <Button.CommandParameter>
+                            <MultiBinding Converter="{StaticResource MultiParaConverter}">
+                                <Binding Path="ProjectName"/>
+                                <Binding Path="ProjectDir"/>
+                                <Binding Path="ColumnLists"/>
+                            </MultiBinding>
+                        </Button.CommandParameter>
+                    </Button>
+                    <!--<Button HorizontalAlignment="Stretch" Style="{StaticResource AccentButtonStyle}" IsEnabled="False"
+                            HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                        <TextBlock>
+                            회귀 분석<LineBreak/>
+                            11/07 업데이트 예정
+                        </TextBlock>
+                    </Button>-->
+                    <!--<Button Content="분산 분석" HorizontalAlignment="Stretch" Style="{StaticResource AccentButtonStyle}" IsEnabled="False"/>
+                    <Button Content="실험 계획법" HorizontalAlignment="Stretch" Style="{StaticResource AccentButtonStyle}" IsEnabled="False"/>
+                    <Button Content="가설 검정" HorizontalAlignment="Stretch" Style="{StaticResource AccentButtonStyle}" IsEnabled="False"/>-->
+                </ui:SimpleStackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

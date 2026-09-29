@@ -1,0 +1,73 @@
+﻿<ui:ContentDialog
+    x:Class="DBHTab.Views.ConvertDateTimeOptionView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:viewmodels="clr-namespace:DBHTab.ViewModels"
+    xmlns:local="clr-namespace:DBHTab.Views"
+    xmlns:c="clr-namespace:DBHTab.Converters"
+    d:DataContext="{d:DesignInstance Type=viewmodels:ConvertDateTimeOptionViewModel}"
+    mc:Ignorable="d"
+    x:Name="dialogDateTimeOption"    
+    Title="DateTime 포맷 설정"
+    PrimaryButtonText="적용"
+    IsPrimaryButtonEnabled="{Binding Path=IsSelectFormat}"
+    CloseButtonText="취소"
+    DefaultButton="Primary" Width="1000">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <ui:SimpleStackPanel Grid.Column="0" Margin="0" Spacing="10">
+            <TextBlock Text="보기" HorizontalAlignment="Left" Margin="0,-5,0,0"/>
+            <Border BorderThickness="2" BorderBrush="DarkGray" HorizontalAlignment="Stretch">
+                <TextBlock Text="{Binding Sample}" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+            </Border>
+            <ui:RadioButtons
+                x:Name="rdoDateTimeFormat" MaxColumns="2"
+                HorizontalAlignment="Stretch">
+                <RadioButton x:Name="rdobtnOriginFormat" Content="사전 정의 포맷" IsChecked="True"/>
+                <RadioButton x:Name="rdobtnUserFormat" Content="사용자 정의 포맷"/>
+            </ui:RadioButtons>
+            <ComboBox
+                x:Name="cmbOriginFormat"
+                ui:ControlHelper.Header="사전 정의 포맷"
+                HorizontalAlignment="Stretch"
+                IsEditable="False"              
+                SelectionChanged="OriginFormat_SelectionChanged"
+                IsEnabledChanged="OriginFormat_EnabledChanged"
+                IsEnabled="{Binding Path=IsChecked, ElementName=rdobtnOriginFormat}"
+                ItemTemplate="{StaticResource DateTimeColumnComboItem}"
+                ItemsSource="{Binding OriginFormats}"/>
+            <TextBox 
+                ui:ControlHelper.Header="사용자 정의 포맷" 
+                x:Name="txtUserFormat"
+                IsEnabled="{Binding Path=IsChecked, ElementName=rdobtnUserFormat}"
+                Text="{Binding SelectedFormat, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}"/>
+        </ui:SimpleStackPanel>
+        <DataGrid
+            x:Name="grdFormatCode"
+            Grid.Column="1"
+            IsReadOnly="True"
+            Margin="10,0,0,0"
+            HeadersVisibility="Column"
+            AutoGenerateColumns="False"
+            CanUserReorderColumns="False"
+            SelectionUnit="FullRow"
+            BorderThickness="2"
+            BorderBrush="DarkGray"      
+            ScrollViewer.HorizontalScrollBarVisibility="Visible"
+            ScrollViewer.VerticalScrollBarVisibility="Visible"            
+            ItemsSource="{Binding CodeSamples}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="코드" Binding="{Binding Code}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="의미" Binding="{Binding Meaning}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="예시" Binding="{Binding Example}" IsReadOnly="True"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</ui:ContentDialog>

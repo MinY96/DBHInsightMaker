@@ -1,0 +1,124 @@
+﻿<ui:Page x:Class="DBHTab.Pages.CreateCombiColPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:c="clr-namespace:DBHTab.Converters"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:ui="http://schemas.modernwpf.com/2019"
+      xmlns:local="clr-namespace:DBHTab.Pages"
+      mc:Ignorable="d">
+
+    <ui:ScrollViewerEx>
+        <ui:SimpleStackPanel Background="{DynamicResource ApplicationPageBackgroudThemeBrush}"
+                     Spacing="10" Margin="10">
+            <ui:RadioButtons ui:ControlHelper.Header="조합 타입"
+                     x:Name="rdoCombiType" SelectedIndex="0"
+                             SelectionChanged="rdoCombiType_SelectionChanged">
+                <RadioButton Content="수치형 변수 조합"/>
+                <RadioButton Content="범주형 변수 조합"/>
+                <RadioButton Content="DateTime 변수 조합"/>
+            </ui:RadioButtons>
+            <ui:SimpleStackPanel>
+                <Border BorderThickness="2" BorderBrush="LightGray" Padding="10" Margin="0,-5,0,0">
+                    <ui:SimpleStackPanel Orientation="Horizontal" Spacing="10">
+                        <ComboBox ui:ControlHelper.PlaceholderText="수치형 데이터"
+                                  ItemTemplate="{StaticResource ColumnComboHideItem}"
+                                  ItemsSource="{Binding Path=NumericalColumns}"
+                                  SelectedItem="{Binding Path=SelectedColumnFirst}"/>
+                        <ComboBox ui:ControlHelper.PlaceholderText="연산" x:Name="cmbNumericalCombiOption"
+                                  ItemTemplate="{StaticResource CreateNewColComboItem}"
+                                  SelectedItem="{Binding Path=Calc}"/>
+                        <ComboBox ui:ControlHelper.PlaceholderText="수치형 데이터"
+                                  ItemTemplate="{StaticResource ColumnComboHideItem}"
+                                  ItemsSource="{Binding Path=NumericalColumns}"
+                                  SelectedItem="{Binding Path=SelectedColumnSecond}"/>
+                    </ui:SimpleStackPanel>
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=SelectedIndex, ElementName=rdoCombiType}" Value="0">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                </Border>
+                <Border BorderThickness="2" BorderBrush="LightGray" Padding="10" Margin="0,-5,0,0">
+                    <ui:SimpleStackPanel Orientation="Horizontal" Spacing="10">
+                        <ComboBox ui:ControlHelper.PlaceholderText="범주형 데이터"
+                                    ItemTemplate="{StaticResource ColumnComboHideItem}"
+                                    ItemsSource="{Binding Path=CategoricalColumns}"
+                                    SelectedItem="{Binding Path=SelectedColumnFirst}"/>
+                        <ComboBox ui:ControlHelper.PlaceholderText="연산" x:Name="cmbCategoricalCombiOption"
+                                  ItemTemplate="{StaticResource CreateNewColComboItem}"
+                                  SelectedItem="{Binding Path=Calc}"/>
+                        <ComboBox ui:ControlHelper.PlaceholderText="범주형 데이터"
+                                    ItemTemplate="{StaticResource ColumnComboHideItem}"
+                                    ItemsSource="{Binding Path=CategoricalColumns}"
+                                    SelectedItem="{Binding Path=SelectedColumnSecond}"/>
+                    </ui:SimpleStackPanel>
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=SelectedIndex, ElementName=rdoCombiType}" Value="1">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                </Border>
+                <Border BorderThickness="2" BorderBrush="LightGray" Padding="10" Margin="0,-5,0,0">
+                    <ui:SimpleStackPanel Spacing="10">
+                        <ui:SimpleStackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Stretch">
+                            <ComboBox ui:ControlHelper.PlaceholderText="DateTime 데이터"
+                                    ItemTemplate="{StaticResource ColumnComboHideItem}"
+                                    ItemsSource="{Binding Path=DateTimeColumns}"
+                                    SelectedItem="{Binding Path=SelectedColumnFirst}"/>
+                            <ComboBox ui:ControlHelper.PlaceholderText="연산" x:Name="cmbDateTimeCombiOption"
+                                      ItemTemplate="{StaticResource CreateNewColComboItem}"
+                                      SelectedItem="{Binding Path=Calc}"/>
+                            <ComboBox ui:ControlHelper.PlaceholderText="DateTime 데이터"
+                                    ItemTemplate="{StaticResource ColumnComboHideItem}"
+                                    ItemsSource="{Binding Path=DateTimeColumns}"
+                                    SelectedItem="{Binding Path=SelectedColumnSecond}"/>
+                        </ui:SimpleStackPanel>
+                        <ui:SimpleStackPanel Orientation="Horizontal" Spacing="10">
+                            <ui:SimpleStackPanel.Style>
+                                <Style TargetType="ui:SimpleStackPanel">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Path=SelectedIndex, ElementName=cmbDateTimeCombiOption}" Value="0">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ui:SimpleStackPanel.Style>
+                            <ui:RadioButtons ui:ControlHelper.Header="단위"
+                                             x:Name="rdoTimeDeltaType" MaxColumns="3" SelectedIndex="0"
+                                             SelectionChanged="rdoTimeDeltaType_SelectionChanged">
+                                <RadioButton Content="년도"/>
+                                <RadioButton Content="월"/>
+                                <RadioButton Content="일"/>
+                                <RadioButton Content="시간"/>
+                                <RadioButton Content="분"/>
+                                <RadioButton Content="초"/>
+                            </ui:RadioButtons>
+                        </ui:SimpleStackPanel>
+                    </ui:SimpleStackPanel>
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=SelectedIndex, ElementName=rdoCombiType}" Value="2">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                </Border>
+            </ui:SimpleStackPanel>
+        </ui:SimpleStackPanel>
+    </ui:ScrollViewerEx>
+</ui:Page>

@@ -1,0 +1,52 @@
+﻿<ui:ContentDialog
+    x:Class="DBHTab.Views.ConvertOrdinalOptionView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:viewmodels="clr-namespace:DBHTab.ViewModels"
+    xmlns:local="clr-namespace:DBHTab.Views"
+    xmlns:c="clr-namespace:DBHTab.Converters"
+    d:DataContext="{d:DesignInstance Type=viewmodels:ConvertDateTimeOptionViewModel}"
+    mc:Ignorable="d"
+    x:Name="dialogDateTimeOption"    
+    Title="순서형 데이터 순서 설정"
+    PrimaryButtonText="적용"
+    IsPrimaryButtonEnabled="{Binding Path=IsSelectFormat}"
+    CloseButtonText="취소"
+    DefaultButton="Primary">
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="100"/>
+        </Grid.ColumnDefinitions>
+        <DataGrid
+            x:Name="grdOrder"
+            Grid.Column="0"
+            IsReadOnly="True"
+            Margin="0,0,10,0"
+            HeadersVisibility="Column"
+            AutoGenerateColumns="False"
+            CanUserReorderColumns="False"
+            SelectionUnit="FullRow"
+            BorderThickness="2"
+            BorderBrush="DarkGray"      
+            ScrollViewer.HorizontalScrollBarVisibility="Visible"
+            ScrollViewer.VerticalScrollBarVisibility="Visible"     
+            Height="500"
+            ItemsSource="{Binding OrderInfo}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Rank" Binding="{Binding Rank}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="고유값" Binding="{Binding Value}" IsReadOnly="True" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <ui:SimpleStackPanel Grid.Column="1" Spacing="10">
+            <Button x:Name="btnMoveTop" Content="Top" HorizontalAlignment="Stretch" Click="btnMoveTop_Click"/>
+            <Button x:Name="btnMoveUp" Content="▲" HorizontalAlignment="Stretch" Click="btnMoveUp_Click"/>
+            <Button x:Name="btnMoveDown" Content="▼" HorizontalAlignment="Stretch" Click="btnMoveDown_Click"/>
+            <Button x:Name="btnMoveBottom" Content="Bottom" HorizontalAlignment="Stretch" Click="btnMoveBottom_Click"/>
+        </ui:SimpleStackPanel>
+    </Grid>
+</ui:ContentDialog>

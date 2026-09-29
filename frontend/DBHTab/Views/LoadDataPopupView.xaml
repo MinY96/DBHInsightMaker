@@ -1,0 +1,50 @@
+﻿<ui:ContentDialog
+    x:Class="DBHTab.Views.LoadDataPopupView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:viewmodels="clr-namespace:DBHTab.ViewModels"
+    xmlns:local="clr-namespace:DBHTab.Views"
+    xmlns:c="clr-namespace:DBHTab.Converters"
+    d:DataContext="{d:DesignInstance Type=viewmodels:LoadDataPopupViewModel}"
+    mc:Ignorable="d"
+    x:Name="dialogCreateProject"    
+    Title="데이터 로드"
+    PrimaryButtonText="데이터 로드"
+    SecondaryButtonText="취소"
+    DefaultButton="Primary"
+    PrimaryButtonCommand="{Binding LoadDataCommand}"
+    IsPrimaryButtonEnabled="{Binding IsEnableLoadFile}"
+    >
+    <ui:SimpleStackPanel Spacing="12">
+        <ui:RadioButtons Header="파일 형식" MaxColumns="2">
+            <RadioButton Content="CSV" IsChecked="{Binding IsCsv}"/>
+            <RadioButton Content="Excel"/>
+        </ui:RadioButtons>
+        <Button x:Name="btnLoadFilePath" Content="파일 경로"
+                Command="{Binding SetFilePathCommand}"
+                CommandParameter="{Binding IsCsv}"/>
+        <TextBlock
+            Margin="0,-10,0,0"
+            TextDecorations="Underline" FontStyle="Italic"
+            TextTrimming="CharacterEllipsis"
+            Text="{Binding FilePath}"/>
+        <!--<TextBox
+            HorizontalContentAlignment="Left"
+            ui:ControlHelper.Header="Sheet명"
+            Visibility="{Binding IsCsv,
+            Converter={StaticResource FileTypeToVisibilityConverter}}"
+            Text="{Binding SheetName, Mode=TwoWay}"/>-->
+        <ComboBox            
+            x:Name="cmbSheetName"
+            ui:ControlHelper.Header="Sheet명"
+            HorizontalAlignment="Stretch"
+            SelectedValue="{Binding SheetName, Mode=TwoWay}"
+            ItemsSource="{Binding SheetS, UpdateSourceTrigger=PropertyChanged}"
+            Visibility="{Binding IsCsv, Converter={StaticResource FileTypeToVisibilityConverter}}"/>
+
+    </ui:SimpleStackPanel>
+</ui:ContentDialog>
+

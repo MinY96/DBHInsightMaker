@@ -1,0 +1,145 @@
+﻿<ui:Page x:Class="DBHTab.Pages.CreateCalcColPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:c="clr-namespace:DBHTab.Converters"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:ui="http://schemas.modernwpf.com/2019"
+      xmlns:local="clr-namespace:DBHTab.Pages"
+      mc:Ignorable="d">
+
+    <ui:ScrollViewerEx>
+        <ui:SimpleStackPanel Background="{DynamicResource ApplicationPageBackgroudThemeBrush}"
+                             Spacing="10" Margin="10">
+            <ui:RadioButtons ui:ControlHelper.Header="연산 타입"
+                             x:Name="rdoCalcType" MaxColumns="3" SelectedIndex="0"
+                             SelectionChanged="rdoCalcType_SelectionChanged">
+                <RadioButton Content="수치형 연산"/>
+                <RadioButton Content="범주형 연산"/>
+                <RadioButton Content="함수"/>
+            </ui:RadioButtons>
+            <ui:SimpleStackPanel>
+                <Border BorderThickness="2" BorderBrush="LightGray" Padding="10" Margin="0,-5,0,0">
+                    <ui:SimpleStackPanel Orientation="Horizontal" Spacing="10">
+                        <ComboBox ui:ControlHelper.PlaceholderText="수치형 데이터"
+                                  ItemTemplate="{StaticResource ColumnComboHideItem}"
+                                  ItemsSource="{Binding Path=NumericalColumns}"
+                                  SelectedItem="{Binding Path=SelectedColumn}"/>
+                        <ComboBox ui:ControlHelper.PlaceholderText="연산"
+                                  x:Name="cmbNumericalOption"
+                                  ItemTemplate="{StaticResource CreateNewColComboItem}"
+                                  SelectedItem="{Binding Path=Calc}"/>
+                        <ui:NumberBox PlaceholderText="값" 
+                                      SpinButtonPlacementMode="Inline"
+                                      Value="{Binding Path=CalcValue}"/>
+                    </ui:SimpleStackPanel>
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=SelectedIndex, ElementName=rdoCalcType}" Value="0">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                </Border>
+                <Border BorderThickness="2" BorderBrush="LightGray" Padding="10" Margin="0,-5,0,0">
+                    <ui:SimpleStackPanel Spacing="10">
+                        <ui:SimpleStackPanel Orientation="Horizontal" Spacing="10">
+                            <ComboBox ui:ControlHelper.PlaceholderText="범주형 데이터"
+                                      ItemTemplate="{StaticResource ColumnComboHideItem}"
+                                      ItemsSource="{Binding Path=CategoricalColumns}"
+                                      SelectedItem="{Binding Path=SelectedColumn}"/>
+                            <ComboBox ui:ControlHelper.PlaceholderText="연산" 
+                                      x:Name="cmbCategoricalOption" 
+                                      ItemTemplate="{StaticResource CreateNewColComboItem}"
+                                      SelectedItem="{Binding Path=Calc}"/>
+                        </ui:SimpleStackPanel>
+                        <ui:SimpleStackPanel Orientation="Horizontal" Spacing="10">
+                            <ui:SimpleStackPanel.Style>
+                                <Style TargetType="ui:SimpleStackPanel">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Path=SelectedIndex, ElementName=cmbCategoricalOption}" Value="4">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ui:SimpleStackPanel.Style>
+                            <TextBox ui:ControlHelper.Header="자르기 기준 문자" Width="150"
+                                     Text="{Binding Path=SplitText, UpdateSourceTrigger=PropertyChanged}"/>
+                            <ui:NumberBox ui:ControlHelper.Header="몇 번째"
+                                PlaceholderText="값" SpinButtonPlacementMode="Inline" Minimum="1" 
+                                          Value="{Binding SplitOrder}" SmallChange="1"/>
+                        </ui:SimpleStackPanel>
+                        <ui:SimpleStackPanel Orientation="Horizontal" Spacing="10">
+                            <ui:SimpleStackPanel.Style>
+                                <Style TargetType="ui:SimpleStackPanel">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Path=SelectedIndex, ElementName=cmbCategoricalOption}" Value="5">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ui:SimpleStackPanel.Style>
+                            <TextBox ui:ControlHelper.Header="찾을 문자열" Width="150" TextWrapping="Wrap"
+                                     Text="{Binding Path=ReplaceOld, UpdateSourceTrigger=PropertyChanged}"/>
+                            <TextBox ui:ControlHelper.Header="바꿀 문자열" Width="150" TextWrapping="Wrap"
+                                     Text="{Binding Path=ReplaceNew, UpdateSourceTrigger=PropertyChanged}"/>
+                        </ui:SimpleStackPanel>
+                        <ui:SimpleStackPanel Orientation="Horizontal" Spacing="10">
+                            <ui:SimpleStackPanel.Style>
+                                <Style TargetType="ui:SimpleStackPanel">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Path=SelectedIndex, ElementName=cmbCategoricalOption}" Value="6">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ui:SimpleStackPanel.Style>
+                            <TextBox ui:ControlHelper.Header="붙일 문자열" Width="150" TextWrapping="Wrap"
+                                     Text="{Binding Path=ConcatenateText, UpdateSourceTrigger=PropertyChanged}"/>
+                            <ui:ToggleSwitch ui:ControlHelper.Header="붙일 위치" OnContent="앞" OffContent="뒤"
+                                             IsOn="{Binding Path=ConcatenateOnPrev, UpdateSourceTrigger=PropertyChanged}"/>
+                        </ui:SimpleStackPanel>
+                    </ui:SimpleStackPanel>
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=SelectedIndex, ElementName=rdoCalcType}" Value="1">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                </Border>
+                <Border BorderThickness="2" BorderBrush="LightGray" Padding="10" Margin="0,-5,0,0">
+                    <ui:SimpleStackPanel Orientation="Horizontal" Spacing="10">
+                        <ComboBox ui:ControlHelper.PlaceholderText="수치형 데이터"
+                                  ItemTemplate="{StaticResource ColumnComboHideItem}"
+                                  ItemsSource="{Binding Path=NumericalColumns}"
+                                  SelectedItem="{Binding Path=SelectedColumn}"/>
+                        <ComboBox ui:ControlHelper.PlaceholderText="함수"
+                                  x:Name="cmbFunctionOption" 
+                                  ItemTemplate="{StaticResource CreateNewColComboItem}"
+                                  SelectedItem="{Binding Path=Calc}"/>
+                    </ui:SimpleStackPanel>
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=SelectedIndex, ElementName=rdoCalcType}" Value="2">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                </Border>
+            </ui:SimpleStackPanel>
+        </ui:SimpleStackPanel>
+    </ui:ScrollViewerEx>
+</ui:Page>

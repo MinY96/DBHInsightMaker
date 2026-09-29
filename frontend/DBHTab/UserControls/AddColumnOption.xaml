@@ -1,0 +1,97 @@
+﻿<UserControl x:Class="DBHTab.UserControls.AddColumnOption"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:c="clr-namespace:DBHTab.Models"
+             xmlns:local="clr-namespace:DBHTab.UserControls"
+             mc:Ignorable="d">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top"
+                    Orientation="Horizontal"
+                    Margin="0,0,0,5">
+            <TextBlock Text="Y축 컬럼(수치형: N개)" VerticalAlignment="Center" Margin="0,0,0,0"/>
+            <Button Content="추가" Margin="10,0,0,0" Padding="10,2" VerticalAlignment="Center" Click="AddColumn_Click"/>
+        </StackPanel>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding AddedColumns, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type c:ChartColumnOption}">
+                        <Border BorderThickness="1" BorderBrush="#DDD" Background="#DDD" Margin="5" Padding="5">
+                            <StackPanel Orientation="Vertical">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="Y축 컬럼(수치형)" Margin="0,0,0,3" VerticalAlignment="Center"/>
+                                        <ComboBox Width="360" Margin="0,0,5,0" 
+                                                  ItemsSource="{Binding Columns, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                  SelectedValue="{Binding Column, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  />
+                                    </StackPanel>
+                                    <Button Content="삭제" Margin="5,0,0,0" Click="RemoveColumn_Click"/>
+                                </StackPanel>
+                                <Expander Margin="5" Header="세부 옵션" IsExpanded="False" VerticalAlignment="Top" HorizontalAlignment="Right">
+                                    <StackPanel Orientation="Vertical">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <StackPanel Orientation="Vertical">
+                                                <TextBlock Text="라인 스타일" Margin="0,0,0,3" VerticalAlignment="Center"/>
+                                                <ComboBox Width="120" Margin="0,0,5,0"
+                                                    SelectedValue="{Binding LineStyle, Mode=TwoWay, Converter={StaticResource ChartOptionStringToComboBoxItemConverter}, UpdateSourceTrigger=PropertyChanged}">
+                                                    <ComboBoxItem Content="auto"/>
+                                                    <ComboBoxItem Content="solid"/>
+                                                    <ComboBoxItem Content="dotted"/>
+                                                    <ComboBoxItem Content="dashed"/>
+                                                    <ComboBoxItem Content="dashdot"/>
+                                                </ComboBox>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Vertical">
+                                                <TextBlock Text="라인 두께" Margin="0,0,0,3" VerticalAlignment="Center"/>
+                                                <xctk:IntegerUpDown Margin="0,0,5,0" Width="120" Minimum="1" FormatString="N0" Increment="1" 
+                                                                    Value="{Binding LineWidth, Mode=TwoWay, Converter={StaticResource ChartOptionStringToNullableIntConverter}}"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Vertical">
+                                                <TextBlock Text="라인 색상" Margin="0,0,0,3" VerticalAlignment="Center"/>
+                                                <xctk:ColorPicker Width="120" Margin="0,0,5,0" VerticalAlignment="Stretch"                                                      
+                                                                SelectedColor="{Binding Color, Converter={StaticResource ChartOptionStringToColorConverter}}"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,5,0,0">
+                                            <StackPanel Orientation="Vertical">
+                                                <TextBlock Text="마커 스타일" Margin="0,0,0,3" VerticalAlignment="Center"/>
+                                                <ComboBox Width="120" Margin="0,0,5,0"
+                                                    SelectedValue="{Binding Marker, Mode=TwoWay, Converter={StaticResource ChartOptionStringToComboBoxItemConverter}, UpdateSourceTrigger=PropertyChanged}">
+                                                    <ComboBoxItem Content="auto"/>
+                                                    <ComboBoxItem Content="."/>
+                                                    <ComboBoxItem Content="o"/>
+                                                    <ComboBoxItem Content="s"/>
+                                                    <ComboBoxItem Content="p"/>
+                                                    <ComboBoxItem Content="*"/>
+                                                    <ComboBoxItem Content="D"/>
+                                                    <ComboBoxItem Content="d"/>
+                                                </ComboBox>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Vertical">
+                                                <TextBlock Text="마커 크기" Margin="0,0,0,3" VerticalAlignment="Center"/>
+                                                <xctk:IntegerUpDown Margin="0,0,5,0" Width="120" Minimum="1" FormatString="N0" Increment="1" 
+                                                                    Value="{Binding MarkerSize, Mode=TwoWay, Converter={StaticResource ChartOptionStringToNullableIntConverter}}"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,5,0,0">
+                                            <StackPanel Orientation="Vertical">
+                                                <TextBlock Text="라벨" Margin="0,0,0,3" VerticalAlignment="Center"/>
+                                                <TextBox Margin="0,0,5,0" Text="{Binding Label, UpdateSourceTrigger=PropertyChanged}" Width="250"/>
+                                            </StackPanel>
+                                            <CheckBox Content="보조축" IsThreeState="False" VerticalAlignment="Top"
+                                                      IsChecked="{Binding IsSecondaryAxis, Converter={StaticResource ChartOptionStringToNullableBoolConverter}}"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Expander>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+    </DockPanel>
+</UserControl>

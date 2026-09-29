@@ -1,0 +1,88 @@
+﻿<UserControl x:Class="DBHTab.UserControls.ucChartViewer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="http://schemas.modernwpf.com/2019"
+             xmlns:c="clr-namespace:DBHTab.Converters"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DBHTab.UserControls"
+             mc:Ignorable="d"
+             d:DesignHeight="550" d:DesignWidth="700">
+    <Border
+        Background="{DynamicResource SystemControlPageBackgroundChromeLowBrush}"
+        HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="40"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="40"/>
+            </Grid.ColumnDefinitions>
+            <Button
+                x:Name="btnPrev" Grid.Column="0"
+                Content="◀"
+                FontSize="25"
+                FontWeight="UltraBold"
+                VerticalContentAlignment="Center"
+                HorizontalContentAlignment="Center"
+                VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                Click="btnPrev_Click"/>
+            <Button
+                x:Name="btnNext" Grid.Column="2"
+                Content="▶"
+                FontSize="25"
+                FontWeight="UltraBold"
+                VerticalContentAlignment="Center"
+                HorizontalContentAlignment="Center"
+                VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                Click="btnNext_Click"/>
+            <Grid Grid.Column="1" Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="30"/>
+                </Grid.RowDefinitions>
+                <ui:SimpleStackPanel Grid.Row="0" Spacing="5">
+                    <TextBlock Text="{Binding CurrentChartInfo.ChartName, UpdateSourceTrigger=PropertyChanged,
+                        RelativeSource={RelativeSource AncestorType=local:ucChartViewer}}"
+                               FontSize="20" FontWeight="Bold" HorizontalAlignment="Left"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="90"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox 
+                            ui:ControlHelper.Header="차트 파일명"
+                            Grid.Column="0" FontSize="15"
+                            HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                            PreviewTextInput="ChartFileName_PreviewTextInput"
+                            Text="{Binding CurrentChartInfo.ChartFileName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged,
+                            RelativeSource={RelativeSource AncestorType=local:ucChartViewer}}"/>
+                        <Button            
+                            Grid.Column="1" Content="차트 저장"
+                            Margin="10,0,0,0"
+                            HorizontalAlignment="Stretch" VerticalAlignment="Bottom" 
+                            Command="{Binding SaveChartImageCommand, RelativeSource={RelativeSource AncestorType=local:ucChartViewer}}"
+                            Style="{StaticResource AccentButtonStyle}">
+                            <Button.CommandParameter>
+                                <MultiBinding Converter="{StaticResource MultiParaConverter}">
+                                    <Binding Path="CurrentChartInfo.ChartFileName" RelativeSource="{RelativeSource AncestorType=local:ucChartViewer}"/>
+                                    <Binding Path="CurrentChartInfo.ChartImage" RelativeSource="{RelativeSource AncestorType=local:ucChartViewer}"/>
+                                </MultiBinding>
+                            </Button.CommandParameter>
+                        </Button>
+                    </Grid>
+                </ui:SimpleStackPanel>
+                <Image 
+                    x:Name="ChartImage" 
+                    Grid.Row="1"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                    Source="{Binding CurrentChartInfo.ChartImage, UpdateSourceTrigger=PropertyChanged,
+                        RelativeSource={RelativeSource AncestorType=local:ucChartViewer}}"/>
+                <TextBlock Grid.Row="2" 
+                           HorizontalAlignment="Center" VerticalAlignment="Center"                           
+                           Text="{Binding PageInfo, UpdateSourceTrigger=PropertyChanged,
+                    RelativeSource={RelativeSource AncestorType=local:ucChartViewer}}"/>
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

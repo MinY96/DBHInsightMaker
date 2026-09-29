@@ -1,0 +1,6 @@
+build/
+dist/
+__pycache__/
+__pycache__/*
+eda_manager/chart/relative/__pycache__/
+eda_manager/chart/single/__pycache__/

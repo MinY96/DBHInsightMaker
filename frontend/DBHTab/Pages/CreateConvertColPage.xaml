@@ -1,0 +1,67 @@
+﻿<ui:Page x:Class="DBHTab.Pages.CreateConvertColPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:c="clr-namespace:DBHTab.Converters"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:ui="http://schemas.modernwpf.com/2019"
+      xmlns:local="clr-namespace:DBHTab.Pages"
+      mc:Ignorable="d">
+
+    <ui:ScrollViewerEx>
+        <ui:SimpleStackPanel Background="{DynamicResource ApplicationPageBackgroudThemeBrush}"
+         Spacing="10" Margin="10">
+            <ui:SimpleStackPanel Spacing="10">
+                <ComboBox 
+                ui:ControlHelper.Header="적용할 데이터"
+                ui:ControlHelper.PlaceholderText="수치형 데이터"
+                ItemTemplate="{StaticResource ColumnComboHideItem}"
+                ItemsSource="{Binding Path=NumericalColumns}"
+                SelectedItem="{Binding Path=SelectedColumn}"/>
+                <ui:RadioButtons ui:ControlHelper.Header="이상치 탐지 기법"
+                x:Name="rdoConvertType" MaxColumns="2" SelectedIndex="0" SelectionChanged="rdoConvertType_SelectionChanged">
+                    <RadioButton Content="정규분포 변환"/>
+                    <RadioButton Content="스케일러"/>
+                </ui:RadioButtons>
+                <ui:SimpleStackPanel>
+                    <Border BorderThickness="2" BorderBrush="LightGray" Padding="10" Margin="0,-5,0,0">
+                        <ComboBox 
+                            ui:ControlHelper.Header="정규분포 변환"
+                            ui:ControlHelper.PlaceholderText="변환 Method" x:Name="cmbNormalizeConverter"
+                            HorizontalAlignment="Stretch"
+                            ItemTemplate="{StaticResource CreateNewColComboItem}"
+                            SelectedItem="{Binding Path=Calc}"/>
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Path=SelectedIndex, ElementName=rdoConvertType}" Value="0">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                    </Border>
+                    <Border BorderThickness="2" BorderBrush="LightGray" Padding="10" Margin="0,-5,0,0">
+                        <ComboBox 
+                            ui:ControlHelper.Header="스케일러 적용"
+                            ui:ControlHelper.PlaceholderText="Scaler 타입" x:Name="cmbScalerConverter"
+                            HorizontalAlignment="Stretch"
+                            ItemTemplate="{StaticResource CreateNewColComboItem}"
+                            SelectedItem="{Binding Path=Calc}"/>
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Path=SelectedIndex, ElementName=rdoConvertType}" Value="1">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                    </Border>
+                </ui:SimpleStackPanel>
+            </ui:SimpleStackPanel>
+        </ui:SimpleStackPanel>
+    </ui:ScrollViewerEx>
+</ui:Page>

@@ -1,0 +1,161 @@
+﻿<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <DataTemplate x:Key="CreateNewColComboItem">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="4*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="{Binding Symbol}"
+           FontWeight="Bold" HorizontalAlignment="Left"/>
+            <TextBlock Grid.Column="2" Text="{Binding Description}"
+           FontStyle="Italic"                            
+           HorizontalAlignment="Right">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ComboBoxItem}}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="ColumnComboHideItem">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="{Binding Column}"
+           FontWeight="Bold" HorizontalAlignment="Left"/>
+            <TextBlock Grid.Column="1" Text="{Binding ColumnType, Converter={StaticResource ColumnTypeConverter}}"
+           FontStyle="Italic"                            
+           HorizontalAlignment="Center">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ComboBoxItem}}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+            <TextBlock Grid.Column="3" Text="{Binding ColumnChar, Converter={StaticResource ColumnCharConverter}}"
+           FontStyle="Italic"
+           HorizontalAlignment="Center">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ComboBoxItem}}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="ColumnComboItem">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="{Binding Column}"
+                           FontWeight="Bold" HorizontalAlignment="Left"/>
+            <TextBlock Grid.Column="1" Text="{Binding ColumnType, Converter={StaticResource ColumnTypeConverter}}"
+                           FontStyle="Italic"                            
+                           HorizontalAlignment="Center"/>
+            <TextBlock Grid.Column="2" Text="{Binding ColumnChar, Converter={StaticResource ColumnCharConverter}}"
+                           FontStyle="Italic"
+                           HorizontalAlignment="Center"/>
+        </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="DateTimeColumnComboItem">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="2"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="{Binding Format}"
+                   FontWeight="Bold" HorizontalAlignment="Left"/>
+            <TextBlock Grid.Column="2" Text="{Binding Example}"
+                   FontStyle="Italic"                            
+                   HorizontalAlignment="Right">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ComboBoxItem}}"
+                                             Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="ColumnListViewTemplate">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                       Text="{Binding Column, Mode=OneTime}"
+                       Style="{DynamicResource BaseTextBlockStyle}"/>
+            <TextBlock Grid.Row="1" Grid.Column="0"
+                       Text="{Binding ColumnType, Mode=OneTime, Converter={StaticResource ColumnTypeConverter}}"
+                       Style="{DynamicResource BodyTextBlockStyle}"
+                       FontStyle="Italic"/>
+            <TextBlock Grid.Row="1" Grid.Column="1"
+                       Margin="5,0,0,0"
+                       Text="{Binding UniqueCount, Mode=OneTime, StringFormat= (고유값 \{0:N0\}개)}"
+                       Style="{DynamicResource BodyTextBlockStyle}"
+                       FontStyle="Italic"/>
+        </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="ColumnListRegProjectTemplate">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                   Text="{Binding ModelType, Mode=OneTime}"
+                   Style="{DynamicResource BaseTextBlockStyle}"/>
+            <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                   Text="{Binding CreateTime, Mode=OneTime}"
+                   Style="{DynamicResource BodyTextBlockStyle}"
+                   FontStyle="Italic"/>
+            <TextBlock Grid.Row="2" Grid.Column="0"
+                   Text="{Binding DepVar, Mode=OneTime, StringFormat='Y: {0}'}"
+                   Style="{DynamicResource BodyTextBlockStyle}"
+                   FontStyle="Italic"/>
+            <TextBlock Grid.Row="3" Grid.Column="0"
+                       Style="{DynamicResource BodyTextBlockStyle}"
+                       FontStyle="Italic"
+                       Text="{Binding OptionDetail}"/>
+        </Grid>
+    </DataTemplate>
+</ResourceDictionary>

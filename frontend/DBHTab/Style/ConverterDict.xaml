@@ -1,0 +1,26 @@
+﻿<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:c="clr-namespace:DBHTab.Converters">
+    <c:AnalyzeStateConverter x:Key="AnalyzeStateConverter"/>
+    <c:BytesToBitmapConverter x:Key="BytesToBitmapConverter"/>
+    <c:CheckBoxToVisibilityConverter x:Key="CheckBoxToVisibilityConverter"/>
+    <c:ColumnCharConverter x:Key="ColumnCharConverter"/>
+    <c:ColumnTypeConverter x:Key="ColumnTypeConverter"/>
+    <c:ComboBoxItemEnabledConverter x:Key="ComboBoxItemEnabledConverter"/>
+    <c:ContentToOptionCheckConverter x:Key="ContentToOptionCheckConverter"/>
+    <c:DateTimeConvertorJson x:Key="DateTimeConvertorJson"/>
+    <c:DateTimeToStringConverter x:Key="DateTimeToStringConverter"/>
+    <c:FileTypeToVisibilityConverter x:Key="FileTypeToVisibilityConverter"/>
+    <c:ListToCountConverter x:Key="ListToCountConverter"/>
+    <c:MultiParaConverter x:Key="MultiParaConverter"/>
+    <c:NullImageConverter x:Key="NullImageConverter"/>
+    <c:StringToFloatConverter x:Key="StringToFloatConverter"/>
+    <c:ChartOptionStringToColorConverter x:Key="ChartOptionStringToColorConverter"/>
+    <c:ChartOptionStringToNullableBoolConverter x:Key="ChartOptionStringToNullableBoolConverter"/>
+    <c:ChartOptionStringToNullableIntConverter x:Key="ChartOptionStringToNullableIntConverter"/>
+    <c:ChartOptionStringToNullableDoubleConverter x:Key="ChartOptionStringToNullableDoubleConverter"/>
+    <c:ChartOptionStringToDateTimeConverter x:Key="ChartOptionStringToDateTimeConverter"/>
+    <c:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    <c:ChartOptionStringToComboBoxItemConverter x:Key="ChartOptionStringToComboBoxItemConverter"/>
+</ResourceDictionary>

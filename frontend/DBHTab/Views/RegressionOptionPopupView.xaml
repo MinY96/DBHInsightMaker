@@ -1,0 +1,184 @@
+﻿<Window x:Class="DBHTab.Views.RegressionOptionPopupView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="http://schemas.modernwpf.com/2019"
+        xmlns:local="clr-namespace:DBHTab.Views"
+        xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
+        ui:WindowHelper.UseModernWindowStyle="True"
+        mc:Ignorable="d"
+        Title="회귀 분석 옵션" MinHeight="650" MinWidth="870" 
+        Height="650" Width="600"
+        WindowStartupLocation="CenterOwner">
+    <Grid Margin="10,0,10,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="300"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="270"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0" Grid.Row="0" x:Name="grdColumnSetting"
+              IsEnabled="{Binding IsLoad, Converter={StaticResource AnalyzeStateConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="140"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <ui:SimpleStackPanel Grid.Row="0" Orientation="Horizontal" Spacing="5">
+                    <TextBlock Text="변수 리스트" VerticalAlignment="Center" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding Path=ColumnsCount, StringFormat=(\{0:N0\}개)}"
+                               VerticalAlignment="Center"/>
+                </ui:SimpleStackPanel>
+                <ui:ListView Grid.Row="1" 
+                             x:Name="lvSourceColumns"
+                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                             SelectionMode="Multiple"
+                             BorderThickness="1"
+                             BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
+                             ItemTemplate="{StaticResource ColumnListViewTemplate}"
+                             ItemsSource="{Binding Columns}"/>
+            </Grid>
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+                <ui:SimpleStackPanel Grid.Row="0" Orientation="Horizontal" Spacing="5">
+                    <TextBlock Text="독립 변수" VerticalAlignment="Center" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding Path=IndepColumnsCount, StringFormat=(\{0:N0\}개)}"
+                               VerticalAlignment="Center"/>
+                </ui:SimpleStackPanel>
+                <ui:ListView Grid.Row="1" 
+                     x:Name="lvIndepColumns"
+                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                     SelectionMode="Multiple"
+                     BorderThickness="1"
+                     BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
+                     ItemTemplate="{StaticResource ColumnListViewTemplate}"
+                     ItemsSource="{Binding IndepColumns}"/>
+                <ui:SimpleStackPanel Grid.Row="2" Orientation="Horizontal" Spacing="5">
+                    <TextBlock Text="종속 변수" VerticalAlignment="Center" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding Path=DepColumnsCount, StringFormat=(\{0:N0\}개)}"
+                               VerticalAlignment="Center"/>
+                </ui:SimpleStackPanel>
+                <ui:ListView Grid.Row="3" 
+                     x:Name="lvDepColumns"
+                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                     SelectionMode="Single"
+                     BorderThickness="1"
+                     BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
+                     ItemTemplate="{StaticResource ColumnListViewTemplate}"
+                     ItemsSource="{Binding DepColumns}"/>
+            </Grid>
+            <ui:SimpleStackPanel Grid.Column="1" Spacing="10" VerticalAlignment="Center">
+                <ui:ToggleSwitch ui:ControlHelper.Header="Move To" OnContent="독립 변수" OffContent="종속 변수"
+                                 Margin="10,0,10,0"
+                                 HorizontalContentAlignment="Left"
+                                 VerticalContentAlignment="Center"                                 
+                                 IsOn="{Binding Path=IsIndep, UpdateSourceTrigger=PropertyChanged}"/>
+                <Button x:Name="btnMoveForward" Content="→" HorizontalAlignment="Stretch" Margin="10,0,10,0" Click="btnMoveForward_Click"/>
+                <Button x:Name="btnMoveBackward" Content="←" HorizontalAlignment="Stretch" Margin="10,0,10,0" Click="btnMoveBackward_Click"/>
+            </ui:SimpleStackPanel>
+        </Grid>
+        <Border Grid.Row="1" Grid.Column="0"    
+                x:Name="borderRegSetting"
+                Background="{DynamicResource SystemControlPageBackgroundChromeLowBrush}"
+                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                Margin="0,10,0,0" Padding="10"
+                IsEnabled="{Binding IsLoad, Converter={StaticResource AnalyzeStateConverter}}">
+            <ui:SimpleStackPanel Spacing="5">
+                <ui:RadioButtons ui:ControlHelper.Header="변수 선택 기법"
+                    x:Name="rdoSelectionMethod" MaxColumns="4" SelectedIndex="{Binding SelectionMethodIndex}">
+                    <RadioButton Content="선택 안함"/>
+                    <RadioButton Content="전진 선택법"/>
+                    <RadioButton Content="후진 제거법"/>
+                    <RadioButton Content="Step-Wise"/>
+                </ui:RadioButtons>
+                <ui:RadioButtons ui:ControlHelper.Header="스케일러 적용"
+                    x:Name="rdoScalerMethod" MaxColumns="5" SelectedIndex="{Binding ScalerMethodIndex}">
+                    <RadioButton Content="선택 안함" Margin="0,0,-20,0"/>
+                    <RadioButton Content="Standard"  Margin="0,0,-20,0"/>
+                    <RadioButton Content="Min-Max" Margin="0,0,-20,0"/>
+                    <RadioButton Content="Max-Abs" Margin="0,0,-20,0"/>
+                    <RadioButton Content="Robust" Margin="0,0,-20,0"/>
+                </ui:RadioButtons>
+                <ui:RadioButtons ui:ControlHelper.Header="결측치 처리"
+                    x:Name="rdoImputeMethod" MaxColumns="5" SelectedIndex="{Binding ImputeMethodIndex}">
+                    <RadioButton Content="제거" Margin="0,0,-20,0"/>
+                    <RadioButton Content="평균"  Margin="0,0,-20,0"/>
+                    <RadioButton Content="중앙값" Margin="0,0,-20,0"/>
+                    <RadioButton Content="최빈값" Margin="0,0,-20,0"/>
+                    <RadioButton Content="선형" Margin="0,0,-20,0"/>
+                </ui:RadioButtons>
+                <CheckBox x:Name="ckTestSet" Content="Train/Test 분리" IsChecked="{Binding IsSplit}"/>
+                <ui:SimpleStackPanel Orientation="Horizontal" Spacing="5">
+                    <Slider x:Name="sldTestRatio"
+                            Value="{Binding TestRatio}"
+                            IsSnapToTickEnabled="True"
+                            TickPlacement="Both"             
+                            Width="300"                            
+                            Maximum="100" Minimum="0" TickFrequency="10"/>
+                    <TextBlock VerticalAlignment="Center"
+                               Text="{Binding Value, ElementName=sldTestRatio, Mode=OneWay, StringFormat={}{0}% (Test Set 비율)}"/>
+                </ui:SimpleStackPanel>
+            </ui:SimpleStackPanel>
+        </Border>
+        <ui:SimpleStackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0"
+                             HorizontalAlignment="Right" VerticalAlignment="Center" Spacing="3">
+            <ui:ProgressRing Width="30" VerticalAlignment="Center" IsActive="{Binding IsLoad}" />
+            <TextBlock Text="{Binding LoadingMessage, UpdateSourceTrigger=PropertyChanged}"
+                    VerticalAlignment="Center"
+                    FontWeight="Light" FontSize="16" Foreground="DeepSkyBlue"/>
+            <Button x:Name="btnRegression"
+                    Width="100"
+                    Style="{StaticResource AccentButtonStyle}"
+                    Command="{Binding LoadRegressionResultCommand}"                
+                    Content="회귀 분석">
+                <Button.CommandParameter>
+                    <MultiBinding Converter="{StaticResource MultiParaConverter}">
+                        <Binding Path="ProjectDir"/>
+                        <Binding Path="IndepColumns"/>
+                        <Binding Path="DepColumns"/>
+                        <Binding Path="SelectionMethodIndex"/>
+                        <Binding Path="ScalerMethodIndex"/>
+                        <Binding Path="ImputeMethodIndex"/>
+                        <Binding Path="IsSplit"/>
+                        <Binding Path="TestRatio"/>
+                    </MultiBinding>
+                </Button.CommandParameter>
+            </Button>
+        </ui:SimpleStackPanel>
+        <Grid Grid.Column="1" Grid.Row="0" Grid.RowSpan="3" 
+              Background="{DynamicResource SystemControlPageBackgroundChromeLowBrush}" Margin="10,0,0,10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <ui:SimpleStackPanel Grid.Row="0" Orientation="Horizontal" Spacing="5">
+                <emoji:TextBlock Text="📜 회귀 분석 History" VerticalAlignment="Center" FontWeight="Bold"/>
+                <TextBlock Text="{Binding Path=RegressionProjectsCount, StringFormat=(\{0:N0\}개)}"
+                   VerticalAlignment="Center"/>
+            </ui:SimpleStackPanel>
+            <ui:ListView Grid.Row="1" 
+                 x:Name="lvRegHistory"
+                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                 SelectionMode="Single"
+                 BorderThickness="1"
+                 MouseDoubleClick="lvRegHistory_MouseDoubleClick"
+                 BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
+                 ItemTemplate="{StaticResource ColumnListRegProjectTemplate}"
+                 ItemsSource="{Binding RegressionProjects}"/>
+        </Grid>
+    </Grid>
+</Window>

@@ -1,0 +1,58 @@
+﻿<ui:ContentDialog 
+    x:Class="DBHTab.Views.CreateNewColumnPopupView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:muxc="http://schemas.modernwpf.com/2019"
+    xmlns:c="clr-namespace:DBHTab.Converters"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:DBHTab.Views"
+    xmlns:viewmodels="clr-namespace:DBHTab.ViewModels"
+    mc:Ignorable="d"
+    PrimaryButtonText="추가"
+    SecondaryButtonText="취소"
+    DefaultButton="Primary"
+    IsPrimaryButtonEnabled="{Binding CompleteOption, UpdateSourceTrigger=PropertyChanged}"    
+    PrimaryButtonCommand="{Binding CreateNewColumnCommand}">
+    <ui:ContentDialog.PrimaryButtonCommandParameter>
+        <MultiBinding Converter="{StaticResource MultiParaConverter}">
+            <Binding Path="ProjectDir"/>
+            <Binding Path="NewColumnName"/>
+            <Binding Path="Content" ElementName="contentFrameCreateCol"/>
+            <Binding />
+        </MultiBinding>
+    </ui:ContentDialog.PrimaryButtonCommandParameter>
+
+    <Grid VerticalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="데이터 추가" Style="{StaticResource HeaderTextBlockStyle}" FontSize="35"/>
+        <ui:SimpleStackPanel Spacing="0" Grid.Row="1">
+            <TextBlock Text="신규 컬럼 명" Margin="0,0,0,5"/>
+            <TextBox 
+                x:Name="txtNewColumnName"                                
+                VerticalContentAlignment="Center"
+                HorizontalAlignment="Stretch"   
+                Text="{Binding Path=NewColumnName, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"/>
+            <ContentPresenter Content="{Binding ElementName=txtNewColumnName, Path=(Validation.Errors).CurrentItem}"/>
+        </ui:SimpleStackPanel>
+        <muxc:NavigationView
+            x:Name="nvCreateColumnOption" Grid.Row="2"
+            PaneTitle="데이터 생성" PaneDisplayMode="Top" IsTabStop="False"
+            IsSettingsVisible="False" IsBackButtonVisible="Collapsed"                 
+            SelectionChanged="nvCreateColumnOption_SelectionChanged">
+            <muxc:NavigationView.MenuItems>
+                <muxc:NavigationViewItem Content="난수 생성" Tag="CreateRandomCol" x:Name="createColPageRandom" IsSelected="True"/>
+                <muxc:NavigationViewItem Content="연산" Tag="CreateCalcCol" x:Name="createColPageCalc"/>
+                <muxc:NavigationViewItem Content="조합" Tag="CreateCombiCol" x:Name="createColPageCombi"/>
+                <muxc:NavigationViewItem Content="이상치" Tag="CreateOutlierCol" x:Name="createColPageOutlier"/>
+                <muxc:NavigationViewItem Content="변환" Tag="CreateConvertCol" x:Name="createColPageConvert"/>
+            </muxc:NavigationView.MenuItems>
+            <ui:Frame x:Name="contentFrameCreateCol" />
+        </muxc:NavigationView>
+    </Grid>
+</ui:ContentDialog>

@@ -1,0 +1,125 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>insightmaker.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\bar-bar_cat_num.png" />
+    <None Remove="Resources\bar-bar_cat_num_cat.png" />
+    <None Remove="Resources\bar-count.png" />
+    <None Remove="Resources\box-num.png" />
+    <None Remove="Resources\box-num_cat.png" />
+    <None Remove="Resources\box-num_cat_cat.png" />
+    <None Remove="Resources\classification_confusion_matrix.png" />
+    <None Remove="Resources\classification_metrics.png" />
+    <None Remove="Resources\dist-dist_cat_cat_num.png" />
+    <None Remove="Resources\dist-dist_num.png" />
+    <None Remove="Resources\dist-dist_num_cat.png" />
+    <None Remove="Resources\dist-dist_num_num.png" />
+    <None Remove="Resources\dist-dist_num_num_cat.png" />
+    <None Remove="Resources\line-dt_num.png" />
+    <None Remove="Resources\line-dt_nums.png" />
+    <None Remove="Resources\line-dt_num_cat.png" />
+    <None Remove="Resources\line-index_num.png" />
+    <None Remove="Resources\line-index_nums.png" />
+    <None Remove="Resources\line-index_num_cat.png" />
+    <None Remove="Resources\proportion-pie.png" />
+    <None Remove="Resources\proportion-treemap.png" />
+    <None Remove="Resources\proportion-waffle.png" />
+    <None Remove="Resources\proportion-wordcloud.png" />
+    <None Remove="Resources\regression_describe.png" />
+    <None Remove="Resources\regression_metrics.png" />
+    <None Remove="Resources\scatter-num_num.png" />
+    <None Remove="Resources\scatter-num_num_by_cat.png" />
+    <None Remove="Resources\scatter-num_num_num.png" />
+    <None Remove="Resources\scatter-num_num_num_by_cat.png" />
+    <None Remove="Resources\scatter-num_num_num_stem.png" />
+    <None Remove="Resources\scatter-num_num_num_stem_by_cat.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="insightmaker.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Emoji.Wpf" Version="0.3.4" />
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="5.0.0" />
+    <PackageReference Include="FrameworkExtract.System.Deployment" Version="4.0.30319" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3405.78" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
+    <PackageReference Include="ModernWpf.MessageBox" Version="0.5.2" />
+    <PackageReference Include="ModernWpfUI" Version="0.9.6" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+	  <Content Include="External\app.zip">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		  <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+	  </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\bar-bar_cat_num.png" />
+    <Resource Include="Resources\bar-bar_cat_num_cat.png" />
+    <Resource Include="Resources\bar-count.png" />
+    <Resource Include="Resources\bar-count_cat.png" />
+    <Resource Include="Resources\box-num.png" />
+    <Resource Include="Resources\box-num_cat.png" />
+    <Resource Include="Resources\box-num_cat_cat.png" />
+    <Resource Include="Resources\classification_confusion_matrix.png" />
+    <Resource Include="Resources\classification_metrics.png" />
+    <Resource Include="Resources\dist-dist_cat_cat_num.png" />
+    <Resource Include="Resources\dist-dist_num.png" />
+    <Resource Include="Resources\dist-dist_num_cat.png" />
+    <Resource Include="Resources\dist-dist_num_num.png" />
+    <Resource Include="Resources\dist-dist_num_num_cat.png" />
+    <Resource Include="Resources\line-dt_num.png" />
+    <Resource Include="Resources\line-dt_nums.png" />
+    <Resource Include="Resources\line-dt_num_cat.png" />
+    <Resource Include="Resources\line-index_num.png" />
+    <Resource Include="Resources\line-index_nums.png" />
+    <Resource Include="Resources\line-index_num_cat.png" />
+    <Resource Include="Resources\proportion-pie.png" />
+    <Resource Include="Resources\proportion-treemap.png" />
+    <Resource Include="Resources\proportion-waffle.png" />
+    <Resource Include="Resources\proportion-wordcloud.png" />
+    <Resource Include="Resources\regression_describe.png" />
+    <Resource Include="Resources\regression_metrics.png" />
+    <Resource Include="Resources\scatter-num_num.png" />
+    <Resource Include="Resources\scatter-num_num_by_cat.png" />
+    <Resource Include="Resources\scatter-num_num_num.png" />
+    <Resource Include="Resources\scatter-num_num_num_by_cat.png" />
+    <Resource Include="Resources\scatter-num_num_num_stem.png" />
+    <Resource Include="Resources\scatter-num_num_num_stem_by_cat.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Pages\CreateCalcColPage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="UserControls\AddColumnOption.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

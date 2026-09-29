@@ -1,0 +1,114 @@
+﻿<Window x:Class="DBHTab.Views.OpenProjectView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.modernwpf.com/2019"
+        xmlns:c="clr-namespace:DBHTab.Converters"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DBHTab.Views"
+        mc:Ignorable="d"        
+        ui:WindowHelper.UseModernWindowStyle="True"        
+        MinHeight="700" MinWidth="700" MaxHeight="700" MaxWidth="700"
+        Title="DBH Data 분석 Tool"
+        WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
+    <Window.Resources>
+        <DataTemplate x:Key="ListViewProjectItem">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="350"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                    Grid.Column="0" Text="{Binding ProjectName, Mode=OneTime}"
+                    FontSize="20" FontWeight="Bold"
+                    HorizontalAlignment="Stretch" Margin="12,6,0,0" />
+                <ui:SimpleStackPanel Grid.Column="0" Grid.Row="1"
+                                     Orientation="Horizontal"
+                                     HorizontalAlignment="Stretch" Margin="20,5,0,6" >
+                    <TextBlock
+                        Text="{Binding CreateTime, Mode=OneTime, Converter={StaticResource DateTimeToStringConverter}}"
+                        FontWeight="Normal" FontStyle="Italic"/>
+                    <TextBlock
+                        Text="{Binding ProjectDesc, Mode=OneTime}"
+                        Width="200"
+                        TextTrimming="CharacterEllipsis"
+                        FontWeight="Normal" FontStyle="Italic" Margin="5,0,0,0"/>
+                </ui:SimpleStackPanel>
+                <Button 
+                    Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"
+                    HorizontalAlignment="Right" VerticalAlignment="Center"
+                    Background="OrangeRed"
+                    Command="{Binding DataContext.DeleteProjectCommand, RelativeSource={RelativeSource AncestorType=ui:ListView}}"
+                    CommandParameter="{Binding}"
+                    Content="삭제"/>
+            </Grid>
+        </DataTemplate>
+    </Window.Resources>
+
+    <ui:SimpleStackPanel Margin="12" Spacing="24">
+        <ui:SimpleStackPanel Orientation="Horizontal" Margin="0">
+            <TextBlock Text="DBH InsightMaker" Style="{StaticResource HeaderTextBlockStyle}" FontSize="40"/>
+            <ui:ProgressRing Margin="10,0,0,0" Width="30" VerticalAlignment="Stretch" IsActive="{Binding IsLoad}" />
+            <TextBlock Text="{Binding LoadingMessage, UpdateSourceTrigger=PropertyChanged}"
+                   VerticalAlignment="Center" HorizontalAlignment="Left"
+                   FontWeight="Light" FontSize="16" Foreground="DeepSkyBlue"/>
+        </ui:SimpleStackPanel>
+        <TextBlock Text="DB Hitek 데이터 분석 Tool (v1.4.0) - 업데이트 일자 : 2026-02-24" Margin="12,-20,0,0"/>
+        <Button Content="신규 프로젝트"
+                HorizontalAlignment="Stretch"
+                Height="50"
+                Click="OnCreateProjectButtonClick"
+                IsEnabled="{Binding IsLoad, Converter={StaticResource AnalyzeStateConverter}}"
+                Style="{StaticResource AccentButtonStyle}"/>
+        <ui:SimpleStackPanel Orientation="Horizontal">
+            <TextBlock Text="프로젝트 목록"/>
+            <TextBlock Margin="10,0,0,0"
+                Text="{Binding FilteredProjects, Converter={StaticResource ListToCountConverter}, StringFormat=\{0:N0\}개}"/>
+        </ui:SimpleStackPanel>
+        <Grid Margin="5,-15,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <ui:ListView
+                x:Name="ProjectListView"
+                Grid.Column="0"
+                Background="{DynamicResource SystemControlPageBackgroundChromeLowBrush}"
+                ItemTemplate="{StaticResource ListViewProjectItem}"
+                ItemsSource="{Binding FilteredProjects, UpdateSourceTrigger=PropertyChanged}"
+                MouseDoubleClick="Project_MouseDoubleClick"
+                SelectionMode="Single" Height="400" HorizontalAlignment="Stretch"
+                BorderThickness="1"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"/>
+            <StackPanel Grid.Column="1" Margin="15,0,0,0">
+                <TextBlock
+                    Margin="0"
+                    Style="{DynamicResource BaseTextBlockStyle}">
+                    Filter by...
+                </TextBlock>
+                <TextBox
+                    x:Name="FilterByFirstName"
+                    ui:ControlHelper.Header="프로젝트 명"
+                    Margin="4"
+                    HorizontalAlignment="Stretch"
+                    Text="{Binding FilterProjectName, UpdateSourceTrigger=PropertyChanged}"/>
+                <DatePicker
+                    ui:ControlHelper.Header="시작 일자"
+                    Margin="4"
+                    HorizontalAlignment="Stretch"
+                    SelectedDate="{Binding FilterStartDate, UpdateSourceTrigger=PropertyChanged}"
+                    />
+                <DatePicker
+                    ui:ControlHelper.Header="종료 일자"
+                    Margin="4"
+                    HorizontalAlignment="Stretch"
+                    SelectedDate="{Binding FilterEndDate, UpdateSourceTrigger=PropertyChanged}"
+                    />
+            </StackPanel>
+        </Grid>
+    </ui:SimpleStackPanel>
+</Window>
